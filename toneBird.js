@@ -3,13 +3,15 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = 320;
 canvas.height = 480;
+const numTones = 12;
+const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const bird = {
     x: 50,
-    y: 150,
+    y: 50,
     width: 20,
     height: 20,
-    gravity: 0.1,
+    gravity: 0,
     maxVelocity: 2,
     lift: -4,
     velocity: 0,
@@ -101,7 +103,7 @@ function draw() {
 
 function update() {
     bird.update();
-    updatePipes();
+    //updatePipes();
     checkCollision();
     if (pressed !== 0 && pressed !== -1) {
         if (frameCount - pressed > 1) {
@@ -112,11 +114,18 @@ function update() {
 }
 
 function loop() {
+    const frequency = document.getElementById("pitch").innerText
+
+    var noteNum = 12 * (Math.log( parseInt(frequency) / 440 )/Math.log(2) );
+    var note =  notes[(Math.round( noteNum ) + 69)%12];
+    console.log(note);
+    bird.y =  (canvas.height-30) - (canvas.height/12)*((Math.round( noteNum ) + 69)%12)
     if (!gameOver) {
         draw();
         update();
         frameCount++;
         requestAnimationFrame(loop);
+        
     } else {
         ctx.fillStyle = '#000';
         ctx.font = '30px Arial';
@@ -143,4 +152,8 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-loop();
+
+function  startGame(){
+    loop();
+}
+
