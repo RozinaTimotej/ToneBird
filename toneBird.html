@@ -31,15 +31,11 @@
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <script src="toneBird.js"></script>
-
     <script src="js/pitchdetect.js"></script>
-		
-    <p><button onclick="startPitchDetect();startGame()">Start</button></p>
+    <script src="toneBird.js"></script>
     <p>
-        <button onclick="this.innerText = togglePlayback()">use demo audio</button>
-        <button onclick="toggleLiveInput()">use live input</button>
-        <button onclick="toggleOscillator()">use oscillator</button>
+        <button onclick="setUserVoice(false);togglePlayback();">use demo audio</button>
+        <button onclick="startGame()">Start</button>
     </p>
 
     <div id="detector" class="vague">

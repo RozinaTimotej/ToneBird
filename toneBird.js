@@ -3,7 +3,6 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = 320;
 canvas.height = 480;
-const numTones = 12;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const bird = {
@@ -52,7 +51,9 @@ const pipeGap = 200;
 let pressed = 0;
 let frameCount = 0;
 let score = 0;
+let gameStart = false;
 let gameOver = false;
+let userVoice = true;
 
 function drawPipes() {
     ctx.fillStyle = '#0F0';
@@ -103,29 +104,29 @@ function draw() {
 
 function update() {
     bird.update();
-    //updatePipes();
+    if(userVoice){
+        updatePipes();
+    }
     checkCollision();
     if (pressed !== 0 && pressed !== -1) {
         if (frameCount - pressed > 1) {
             pressed = -1;
         }
     }
-    console.log(score)
 }
 
 function loop() {
     const frequency = document.getElementById("pitch").innerText
-
-    var noteNum = 12 * (Math.log( parseInt(frequency) / 440 )/Math.log(2) );
-    var note =  notes[(Math.round( noteNum ) + 69)%12];
-    console.log(note);
-    bird.y =  (canvas.height-30) - (canvas.height/12)*((Math.round( noteNum ) + 69)%12)
+    var noteNum = notes.length * (Math.log( parseInt(frequency) / 440 )/Math.log(2) );
+    var note =  notes[(Math.round( noteNum ) + 69)%notes.length];
+    if(note){
+        bird.y =  (canvas.height-30) - (canvas.height/notes.length)*((Math.round( noteNum ) + 69)%notes.length)
+    }
     if (!gameOver) {
         draw();
         update();
         frameCount++;
         requestAnimationFrame(loop);
-        
     } else {
         ctx.fillStyle = '#000';
         ctx.font = '30px Arial';
@@ -153,7 +154,22 @@ document.addEventListener('keyup', (e) => {
 });
 
 
+function setUserVoice(bool){
+    userVoice = bool;
+    
+}
+
 function  startGame(){
-    loop();
+    if(!gameStart){
+        startPitchDetect()
+        loop();
+        gameStart = true;
+    }else{
+        pressed = 0;
+        frameCount = 0;
+        score = 0;
+        pipes = []
+        userVoice = true;
+    }
 }
 
