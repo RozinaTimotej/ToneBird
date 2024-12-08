@@ -8,27 +8,23 @@ const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const bird = {
     x: 50,
     y: 50,
+    targetY: 50, // Smooth transition target
     width: 20,
     height: 20,
-    gravity: 0,
+    gravity: 0.1,
     maxVelocity: 2,
     lift: -4,
     velocity: 0,
+    smoothness: 0.1, // Interpolation factor for smooth movement
     show: function () {
         ctx.fillStyle = '#FF0';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     },
     update: function () {
-        if (Math.abs(this.velocity) <= this.maxVelocity) {
-            this.velocity += this.gravity;
-        } else {
-            if (this.velocity <= 0) {
-                this.velocity += this.gravity;
-            } else {
-                this.velocity = this.maxVelocity;
-            }
-        }
-        this.y += this.velocity;
+        // Smoothly interpolate towards targetY
+        this.y += (this.targetY - this.y) * this.smoothness;
+
+        // Ensure the bird stays within canvas bounds
         if (this.y > canvas.height - this.height) {
             this.y = canvas.height - this.height;
             this.velocity = 0;
@@ -38,9 +34,10 @@ const bird = {
             this.velocity = 0;
         }
     },
-    up: function () {
-        this.velocity = 0;
-        this.velocity += this.lift;
+    setTarget: function (pitch) {
+        // Calculate the targetY based on pitch
+        const noteIndex = (Math.round(12 * Math.log2(pitch / 440)) + 69) % notes.length;
+        this.targetY = (canvas.height - 30) - (canvas.height / notes.length) * noteIndex;
     }
 };
 
@@ -52,7 +49,7 @@ let frameCount = 0;
 let score = 0;
 let gameStart = false;
 let gameOver = false;
-let userVoice = true; // true = mic/normal mode with pipes, false = demo audio mode (no pipes)
+let userVoice = true;
 let paused = false;
 let rafID = null;
 
@@ -99,20 +96,18 @@ function checkCollision() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bird.show();
-    drawText();
-    // Draw pipes regardless (so we can see them if they exist)
     drawPipes();
+    drawText();
 }
 
 function update() {
     bird.update();
-    // If userVoice is true (normal mode), update pipes and check collisions
+
     if (userVoice) {
         updatePipes();
         checkCollision();
     }
-    // If userVoice is false (demo mode), skip pipe updates and collisions
-    // Bird still moves because bird.update() is always called
+
     if (pressed !== 0 && pressed !== -1) {
         if (frameCount - pressed > 1) {
             pressed = -1;
@@ -122,6 +117,7 @@ function update() {
 
 function gameLoop() {
     if (paused || gameOver) return;
+
     // Call pitch detection every 5 frames
     if (frameCount % 5 === 0) {
         updatePitchOnce();
@@ -129,12 +125,10 @@ function gameLoop() {
 
     const frequencyText = document.getElementById("pitch").innerText;
     let freqValue = parseInt(frequencyText, 10);
+
+    // Set bird's target position based on frequency
     if (!isNaN(freqValue) && freqValue > 0) {
-        var noteNum = notes.length * (Math.log(freqValue / 440) / Math.log(2));
-        var note = notes[(Math.round(noteNum) + 69) % notes.length];
-        if (note) {
-            bird.y = (canvas.height - 30) - (canvas.height / notes.length) * ((Math.round(noteNum) + 69) % notes.length);
-        }
+        bird.setTarget(freqValue);
     }
 
     draw();
@@ -165,26 +159,20 @@ function setUserVoice(bool) {
 }
 
 function useDemoAudio() {
-    // do not pause the game, just switch to demo audio mode
     setUserVoice(false);
     togglePlayback();
-    // The loop continues, but userVoice=false means no pipes or collisions
-    // Bird continues to move according to pitch from demo audio
 }
 
 function startGame() {
-    // If a loop is already running, cancel it before starting again
     if (rafID) {
         cancelAnimationFrame(rafID);
         rafID = null;
     }
 
-    // Stop demo audio if playing
     if (isPlaying) {
         togglePlayback();
     }
 
-    // Reset game states
     gameStart = true;
     paused = false;
     gameOver = false;
@@ -192,8 +180,8 @@ function startGame() {
     frameCount = 0;
     score = 0;
     pipes = [];
-    userVoice = true; // back to normal user input mode
+    userVoice = true;
 
-    startPitchDetect(); // Starts mic input
+    startPitchDetect();
     rafID = requestAnimationFrame(gameLoop);
 }

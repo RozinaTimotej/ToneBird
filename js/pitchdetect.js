@@ -54,7 +54,7 @@ window.onload = function() {
         return false;
     };
 
-    fetch('music.ogg')
+    fetch('nocoj.ogg')
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP error, status = ${response.status}`);
