@@ -54,7 +54,7 @@ window.onload = function() {
         return false;
     };
 
-    fetch('whistling3.ogg')
+    fetch('music.ogg')
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP error, status = ${response.status}`);
