@@ -6,8 +6,8 @@ canvas.height = 480;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const bird = {
-    x: 50,
-    y: 50,
+    x: 110,
+    y: 150,
     targetY: 50, // Smooth transition target
     width: 20,
     height: 20,
@@ -52,6 +52,7 @@ let gameOver = false;
 let userVoice = true;
 let paused = false;
 let rafID = null;
+let currentNote = "--"; // Current detected note
 
 function drawPipes() {
     ctx.fillStyle = '#0F0';
@@ -63,11 +64,15 @@ function drawPipes() {
 
 function drawText() {
     ctx.font = "25px Arial";
-    ctx.fillText("Score: " + score, 10, 80);
+    ctx.fillStyle = '#000';
+    ctx.fillText("Score: " + score, 10, 40);
+
+    // Display the current detected note
+    ctx.fillText("Tone: " + currentNote, 10, 80);
 }
 
 function updatePipes() {
-    if (frameCount % 280 === 0) {
+    if (frameCount % 280 === 0 && frameCount > 250) {
         const top = Math.random() * (canvas.height / 2);
         const bottom = canvas.height - top - pipeGap;
         pipes.push({ x: canvas.width, top, bottom });
@@ -96,8 +101,8 @@ function checkCollision() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bird.show();
-    drawPipes();
     drawText();
+    drawPipes();
 }
 
 function update() {
@@ -128,6 +133,8 @@ function gameLoop() {
 
     // Set bird's target position based on frequency
     if (!isNaN(freqValue) && freqValue > 0) {
+        const noteIndex = (Math.round(12 * Math.log2(freqValue / 440)) + 69) % notes.length;
+        currentNote = notes[noteIndex]; // Update the current note
         bird.setTarget(freqValue);
     }
 
@@ -181,6 +188,7 @@ function startGame() {
     score = 0;
     pipes = [];
     userVoice = true;
+    currentNote = "--";
 
     startPitchDetect();
     rafID = requestAnimationFrame(gameLoop);
