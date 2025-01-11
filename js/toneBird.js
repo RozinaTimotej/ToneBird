@@ -121,6 +121,8 @@ function update() {
 }
 
 function gameLoop() {
+    console.log(paused,gameOver);
+    
     if (paused || gameOver) return;
 
     // Call pitch detection every 5 frames
