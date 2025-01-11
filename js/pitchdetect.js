@@ -17,6 +17,10 @@ var buflen = 2048;
 var buf = new Float32Array(buflen);
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
+var startedAt;
+var pausedAt;
+var pausedSound = false;
+
 var detectorElem, pitchElem, noteElem, detuneElem, detuneAmount;
 
 window.onload = function() {
@@ -168,8 +172,9 @@ function updatePitchOnce() {
 }
 
 function togglePlayback() {
-    if (isPlaying) {
+    if (isPlaying && !pausedSound) {
         sourceNode.stop(0);
+        pausedAt = undefined;
         sourceNode = null;
         analyser = null;
         isPlaying = false;
@@ -189,7 +194,16 @@ function togglePlayback() {
         analyser.fftSize = 2048;
         sourceNode.connect(analyser);
         analyser.connect(audioContext.destination);
-        sourceNode.start(0);
+        
+        if (pausedAt) {
+            startedAt = Date.now() - pausedAt;
+            sourceNode.start(0, pausedAt / 1000);
+        }
+        else {
+            startedAt = Date.now();
+            sourceNode.start(0);
+        }
         isPlaying = true;
+        pausedSound = true;
     }
 }

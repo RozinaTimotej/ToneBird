@@ -47,7 +47,9 @@
 
     <div id="menu">
         <p><button onclick="startGame(); closeMenu()">Start Game</button></p>
-        <p><button onclick="useDemoAudio(); closeMenu();  rafID = requestAnimationFrame(gameLoop);">Use Demo Audio</button></p>
+        <p><button onclick=" useDemoAudio(); closeMenu();  rafID = requestAnimationFrame(gameLoop);">Use Demo Audio</button></p>
+        <p><input type="file" id="audioUpload" accept="audio/*"></p>
+        <p><button onclick="uploadAudioFile()">Upload Audio File</button></p>
         <p><button onclick="closeMenu();  rafID = requestAnimationFrame(gameLoop);">Close Menu</button></p>
     </div>
 
@@ -57,13 +59,24 @@
     <script src="js/toneBird.js"></script>
 
     <script>
+        let uploadedAudioURL = null;
 
         window.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 if (!paused) {
                     openMenu();
+                    if(isPlaying){
+                        sourceNode.stop(0)
+                        pausedAt = Date.now() - startedAt;
+                        pausedSound = true;
+                    }
                 } else {
                     closeMenu();
+                    console.log(isPlaying);
+                    
+                    if(isPlaying){
+                        togglePlayback()
+                    }
                     rafID = requestAnimationFrame(gameLoop);
                 }
             }
@@ -77,6 +90,28 @@
         function closeMenu() {
             document.getElementById('menu').style.display = 'none';
             paused = false;
+        }
+
+        async function uploadAudioFile() {
+            const audioInput = document.getElementById('audioUpload');
+            const file = audioInput.files[0];
+            if (!file) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const audioData = event.target.result;
+                try {
+                    theBuffer = await audioContext.decodeAudioData(audioData);
+                    alert("Audio file uploaded and ready for playback!");
+                } catch (error) {
+                    alert("Error decoding audio file.");
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
         }
     </script>
 

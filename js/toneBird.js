@@ -168,6 +168,7 @@ function setUserVoice(bool) {
 }
 
 function useDemoAudio() {
+    pausedSound = false;
     setUserVoice(false);
     togglePlayback();
 }
