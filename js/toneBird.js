@@ -1,8 +1,11 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 320;
-canvas.height = 480;
+var height = document.body.clientHeight;
+var width = document.body.clientWidth;
+
+canvas.width = width > 600 ? 600:width;
+canvas.height = height-30;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const bird = {
@@ -50,6 +53,7 @@ let score = 0;
 let gameStart = false;
 let gameOver = false;
 let userVoice = true;
+let freeRoam = false;
 let paused = false;
 let rafID = null;
 let currentNote = "--"; // Current detected note
@@ -107,8 +111,8 @@ function draw() {
 
 function update() {
     bird.update();
-
-    if (userVoice) {
+    
+    if (userVoice && !freeRoam) {
         updatePipes();
         checkCollision();
     }
@@ -121,8 +125,6 @@ function update() {
 }
 
 function gameLoop() {
-    console.log(paused,gameOver);
-    
     if (paused || gameOver) return;
 
     // Call pitch detection every 5 frames
@@ -173,7 +175,7 @@ function useDemoAudio() {
     togglePlayback();
 }
 
-function startGame() {
+function startGame(withObject) {
     if (rafID) {
         cancelAnimationFrame(rafID);
         rafID = null;
@@ -184,6 +186,7 @@ function startGame() {
     }
 
     gameStart = true;
+    freeRoam = withObject
     paused = false;
     gameOver = false;
     pressed = 0;
