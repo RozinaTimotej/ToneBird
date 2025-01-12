@@ -38,11 +38,31 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            min-width: 200px;
             background: rgba(0, 0, 0, 0.8);
             color: white;
             padding: 20px;
             text-align: center;
             border-radius: 10px;
+        }
+
+        .custom-button{
+            border: 1px solid black;
+            background: #fff;
+            color: black;
+            padding: 10px;
+            width: 130px;
+            display: inline-block;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        .custom-button:hover{
+            border: 1px solid black;
+            background: #ffffff8c;
+            color: black;
+
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -51,12 +71,14 @@
     <div><button onclick="buttonEvent()">Open menu</button></div>
 
     <div id="menu">
-        <p><button onclick="startGame(false); closeMenu()">Start Game</button></p>
-        <p><button onclick="startGame(true); closeMenu()">Start No obj</button></p>
-        <p><button onclick=" useDemoAudio(); closeMenuWithAnimation();">Use Demo Audio</button></p>
-        <p><input type="file" id="audioUpload" accept="audio/*"></p>
-        <p><button onclick="uploadAudioFile()">Upload Audio File</button></p>
-        <p><button onclick="closeMenuWithAnimation();">Close Menu</button></p>
+        <p><button onclick="startGame(false); closeMenu()" class="custom-button">Začni igro (z ovirami)</button></p>
+        <p><button onclick="startGame(true); closeMenu()" class="custom-button">Začni igro (brez ovir)</button></p>
+        <p><button onclick=" useDemoAudio(); closeMenuWithAnimation();" class="custom-button">Predvajaj zvok</button></p>
+        <div style="border: 1px solid white ">
+            <p><input type="file" id="audioUpload" accept="audio/*" style="display: none;"><label for="audioUpload" id="predvajanjo"  class="custom-button">Izberi datoteko</label></p>
+            <p><button onclick="uploadAudioFile()"  class="custom-button">Naloži datoteko</button></p>
+        </div>
+        <p><button onclick="closeMenuWithAnimation();"  class="custom-button">Zapri meni</button></p>
     </div>
 
 
@@ -128,6 +150,7 @@
         async function uploadAudioFile() {
             const audioInput = document.getElementById('audioUpload');
             const file = audioInput.files[0];
+            
             if (!file) {
                 alert("Please select a file first.");
                 return;
@@ -138,7 +161,10 @@
                 const audioData = event.target.result;
                 try {
                     theBuffer = await audioContext.decodeAudioData(audioData);
-                    alert("Audio file uploaded and ready for playback!");
+                    
+                    let el = document.getElementById("predvajanjo")
+                    el.innerText = "Izbrana: "+file.name
+                    //alert("Audio file uploaded and ready for playback!");
                 } catch (error) {
                     alert("Error decoding audio file.");
                     console.error(error);
@@ -146,6 +172,7 @@
             };
             reader.readAsArrayBuffer(file);
         }
+        uploadAudioFile()
     </script>
 
     <div id="detector" class="vague" style="display: none !important;">
