@@ -73,8 +73,8 @@
     <div><button onclick="buttonEvent()"  class="custom-button" style="margin:5px;width: calc(100% - 10px);">Odpri meni</button></div>
 
     <div id="menu">
-        <p><button onclick="startGame(false); closeMenu()" class="custom-button">Začni igro (z ovirami)</button></p>
-        <p><button onclick="startGame(true); closeMenu()" class="custom-button">Začni igro (brez ovir)</button></p>
+        <p><button onclick="startGame(false); closeMenu(true);" class="custom-button">Začni igro (z ovirami)</button></p>
+        <p><button onclick="startGame(true); closeMenu(true);" class="custom-button">Začni igro (brez ovir)</button></p>
         <p><button onclick=" useDemoAudio(); closeMenuWithAnimation();" class="custom-button">Predvajaj zvok</button></p>
         <div style="border: 1px solid white ">
             <p><input type="file" id="audioUpload" accept="audio/*" style="display: none;"><label for="audioUpload" id="predvajanjo"  class="custom-button">Izberi datoteko</label></p>
@@ -138,9 +138,19 @@
             paused = true;
         }
 
-        function closeMenu() {
+        function closeMenu(stopMusic) {
             document.getElementById('menu').style.display = 'none';
             paused = false;
+            if(stopMusic){
+                if(sourceNode){
+                    sourceNode.stop(0);
+                }
+                pausedAt = undefined;
+                sourceNode = null;
+                analyser = null;
+                isPlaying = false;
+                isLiveInput = false;
+            }
         }
 
         function closeMenuWithAnimation() {
