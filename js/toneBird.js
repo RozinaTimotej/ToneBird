@@ -17,7 +17,6 @@ tubeImage.src = 'assets/tube_bottom.png';
 const tubeTopImage = new Image();
 tubeTopImage.src = 'assets/tube_top.png';
 
-
 const tubeRImage = new Image();
 tubeRImage.src = 'assets/tube_bottomr.png';
 
@@ -80,6 +79,10 @@ function drawPipes() {
         ctx.drawImage(tubeRImage, pipe.x, 0, pipeWidth, pipe.top);
         ctx.drawImage(tubeTopRImage,pipe.x-2,pipe.top,pipeWidth+2,30)
 
+        ctx.font = "25px Arial";
+        ctx.fillStyle = '#000';
+        ctx.fillText(notes[pipe.index], pipe.x + (pipeWidth-24)/2, pipe.desired + 12);
+
         ctx.drawImage(tubeImage, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         ctx.drawImage(tubeTopImage,pipe.x-2,canvas.height - pipe.bottom,pipeWidth+2,30)
     });
@@ -96,9 +99,12 @@ function drawText() {
 
 function updatePipes() {
     if (frameCount % 280 === 0 && frameCount > 250) {
-        const top = Math.random() * (canvas.height / 2);
+        let desindex = Math.floor(Math.random() * (notes.length - 1) + 0);
+        let desired = (canvas.height - 30) - (canvas.height / notes.length) * desindex;
+
+        const top = desired - pipeGap/2;
         const bottom = canvas.height - top - pipeGap;
-        pipes.push({ x: canvas.width, top, bottom });
+        pipes.push({ x: canvas.width, top, bottom, desired: desired, index: desindex });
     }
 
     pipes.forEach(pipe => {
@@ -173,23 +179,6 @@ function gameLoop() {
     frameCount++;
     rafID = requestAnimationFrame(gameLoop);
 }
-
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        if (pressed == 0) {
-            bird.up();
-            pressed = frameCount;
-        }
-    }
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.code === 'Space') {
-        if (pressed == -1) {
-            pressed = 0;
-        }
-    }
-});
 
 function setUserVoice(bool) {
     userVoice = bool;
