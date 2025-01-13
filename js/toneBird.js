@@ -12,7 +12,7 @@ const birdImage = new Image();
 birdImage.src = './assets/flappy.png';
 
 const tubeImage = new Image();
-tubeImage.src = ',/assets/tube_bottom.png';
+tubeImage.src = './assets/tube_bottom.png';
 
 const tubeTopImage = new Image();
 tubeTopImage.src = './assets/tube_top.png';
