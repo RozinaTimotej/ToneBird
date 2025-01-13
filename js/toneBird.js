@@ -18,16 +18,16 @@ const bird = {
     x: 110,
     y: 150,
     targetY: 50, // Smooth transition target
-    width: 20,
-    height: 20,
+    width: 50,
+    height: 50,
     gravity: 0.1,
     maxVelocity: 2,
     lift: -4,
     velocity: 0,
     smoothness: 0.1, // Interpolation factor for smooth movement
     show: function () {
-        ctx.fillStyle = '#FF0';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
     },
     update: function () {
         // Smoothly interpolate towards targetY
@@ -51,7 +51,7 @@ const bird = {
 };
 
 let pipes = [];
-const pipeWidth = 40;
+const pipeWidth = 80;
 const pipeGap = 200;
 let pressed = 0;
 let frameCount = 0;
@@ -67,8 +67,9 @@ let currentNote = "--"; // Current detected note
 function drawPipes() {
     ctx.fillStyle = '#0F0';
     pipes.forEach(pipe => {
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
-        ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+        ctx.drawImage(tubeImage, pipe.x, 0, pipeWidth, pipe.top);
+
+        ctx.drawImage(tubeImage, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
     });
 }
 
@@ -111,8 +112,8 @@ function checkCollision() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bird.show();
-    drawText();
     drawPipes();
+    drawText();
 }
 
 function update() {
@@ -131,7 +132,14 @@ function update() {
 }
 
 function gameLoop() {
-    if (paused || gameOver) return;
+    if (paused) return;
+
+    if(gameOver){
+        ctx.font = "25px Arial";
+        ctx.fillStyle = '#000';
+        ctx.fillText("Konec igre", canvas.width/2 - 10, canvas.height/2 - 12); 
+        return;
+    } 
 
     // Call pitch detection every 5 frames
     if (frameCount % 5 === 0) {
