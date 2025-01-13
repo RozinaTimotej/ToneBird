@@ -98,7 +98,7 @@ function drawText() {
 }
 
 function updatePipes() {
-    if (frameCount % 280 === 0 && frameCount > 250) {
+    if (frameCount % 400 === 0 && frameCount > 250) {
         let desindex = Math.floor(Math.random() * (notes.length - 1) + 0);
         let desired = (canvas.height - 30) - (canvas.height / notes.length) * desindex;
 
@@ -108,7 +108,7 @@ function updatePipes() {
     }
 
     pipes.forEach(pipe => {
-        pipe.x -= 0.7;
+        pipe.x -= 0.8;
     });
 
     let tmp = pipes.filter(pipe => pipe.x + pipeWidth > 0);
