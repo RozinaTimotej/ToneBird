@@ -26,23 +26,21 @@ tubeTopRImage.src = 'assets/tube_topr.png';
 const bird = {
     x: 110,
     y: 150,
-    targetY: 50, // Smooth transition target
+    targetY: 50,
     width: 50,
     height: 50,
     gravity: 0.1,
     maxVelocity: 2,
     lift: -4,
     velocity: 0,
-    smoothness: 0.1, // Interpolation factor for smooth movement
+    smoothness: 0.1,
     show: function () {
 
         ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
     },
     update: function () {
-        // Smoothly interpolate towards targetY
         this.y += (this.targetY - this.y) * this.smoothness;
 
-        // Ensure the bird stays within canvas bounds
         if (this.y > canvas.height - this.height) {
             this.y = canvas.height - this.height;
             this.velocity = 0;
@@ -53,7 +51,6 @@ const bird = {
         }
     },
     setTarget: function (pitch) {
-        // Calculate the targetY based on pitch
         const noteIndex = (Math.round(12 * Math.log2(pitch / 440)) + 69) % notes.length;
         this.targetY = (canvas.height - 30) - (canvas.height / notes.length) * noteIndex;
     }
@@ -71,7 +68,7 @@ let userVoice = true;
 let freeRoam = false;
 let paused = false;
 let rafID = null;
-let currentNote = "--"; // Current detected note
+let currentNote = "--"; 
 
 function drawPipes() {
     ctx.fillStyle = '#0F0';
@@ -91,14 +88,13 @@ function drawPipes() {
 function drawText() {
     ctx.font = "25px Arial";
     ctx.fillStyle = '#000';
-    ctx.fillText("Score: " + score, 10, 40);
 
-    // Display the current detected note
+    ctx.fillText("Score: " + score, 10, 40);
     ctx.fillText("Tone: " + currentNote, 10, 80);
 }
 
 function updatePipes() {
-    if (frameCount % 500 === 0 && frameCount > 50) {
+    if (frameCount % 400 === 0 && frameCount > 50) {
         let desindex = Math.floor(Math.random() * (notes.length - 1) + 0);
         let desired = (canvas.height - 30) - (canvas.height / notes.length) * desindex;
 
@@ -159,7 +155,6 @@ function gameLoop() {
         return;
     } 
 
-    // Call pitch detection every 5 frames
     if (frameCount % 5 === 0) {
         updatePitchOnce();
     }
@@ -167,10 +162,9 @@ function gameLoop() {
     const frequencyText = document.getElementById("pitch").innerText;
     let freqValue = parseInt(frequencyText, 10);
 
-    // Set bird's target position based on frequency
     if (!isNaN(freqValue) && freqValue > 0) {
         const noteIndex = (Math.round(12 * Math.log2(freqValue / 440)) + 69) % notes.length;
-        currentNote = notes[noteIndex]; // Update the current note
+        currentNote = notes[noteIndex]; 
         bird.setTarget(freqValue);
     }
 
