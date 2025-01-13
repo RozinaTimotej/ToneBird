@@ -9,20 +9,20 @@ canvas.height = height-30;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const birdImage = new Image();
-birdImage.src = './assets/flappy.png';
+birdImage.src = 'assets/flappy.png';
 
 const tubeImage = new Image();
-tubeImage.src = './assets/tube_bottom.png';
+tubeImage.src = 'assets/tube_bottom.png';
 
 const tubeTopImage = new Image();
-tubeTopImage.src = './assets/tube_top.png';
+tubeTopImage.src = 'assets/tube_top.png';
 
 
 const tubeRImage = new Image();
-tubeRImage.src = './assets/tube_bottomr.png';
+tubeRImage.src = 'assets/tube_bottomr.png';
 
 const tubeTopRImage = new Image();
-tubeTopRImage.src = './assets/tube_topr.png';
+tubeTopRImage.src = 'assets/tube_topr.png';
 
 const bird = {
     x: 110,
