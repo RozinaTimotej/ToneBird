@@ -61,7 +61,7 @@ const bird = {
 
 let pipes = [];
 const pipeWidth = 80;
-const pipeGap = 200;
+const pipeGap = 150;
 let pressed = 0;
 let frameCount = 0;
 let score = 0;
@@ -81,7 +81,7 @@ function drawPipes() {
 
         ctx.font = "25px Arial";
         ctx.fillStyle = '#000';
-        ctx.fillText(notes[pipe.index], pipe.x + (pipeWidth-24)/2, pipe.desired + 12);
+        ctx.fillText(notes[pipe.index], pipe.x + (pipeWidth-24)/2, pipe.desired + 25);
 
         ctx.drawImage(tubeImage, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         ctx.drawImage(tubeTopImage,pipe.x-2,canvas.height - pipe.bottom,pipeWidth+2,30)
