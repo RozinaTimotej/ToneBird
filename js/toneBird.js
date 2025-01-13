@@ -9,7 +9,7 @@ canvas.height = height-30;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const birdImage = new Image();
-birdImage.src = '../assets/flappy.png';
+birdImage.src = '/assets/flappy.png';
 
 const tubeImage = new Image();
 tubeImage.src = 'assets/tube_bottom.png';
