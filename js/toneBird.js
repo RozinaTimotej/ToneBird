@@ -8,6 +8,12 @@ canvas.width = width > 600 ? 600:width;
 canvas.height = height-30;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
+const birdImage = new Image();
+birdImage.src = '../assets/flappy.png';
+
+const tubeImage = new Image();
+tubeImage.src = 'assets/tube.png';
+
 const bird = {
     x: 110,
     y: 150,
