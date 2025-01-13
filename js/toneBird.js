@@ -5,7 +5,7 @@ var height = document.body.clientHeight;
 var width = document.body.clientWidth;
 
 canvas.width = width > 600 ? 600:width;
-canvas.height = height-30;
+canvas.height = height-50;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const birdImage = new Image();
