@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 var height = document.body.clientHeight;
 var width = document.body.clientWidth;
 
-canvas.width = width > 600 ? 600:width;
+canvas.width = width > 600 ? width:width;
 canvas.height = height-50;
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
@@ -98,7 +98,7 @@ function drawText() {
 }
 
 function updatePipes() {
-    if (frameCount % 400 === 0 && frameCount > 250) {
+    if (frameCount % 500 === 0 && frameCount > 50) {
         let desindex = Math.floor(Math.random() * (notes.length - 1) + 0);
         let desired = (canvas.height - 30) - (canvas.height / notes.length) * desindex;
 
@@ -108,7 +108,7 @@ function updatePipes() {
     }
 
     pipes.forEach(pipe => {
-        pipe.x -= 0.8;
+        pipe.x -= 1;
     });
 
     let tmp = pipes.filter(pipe => pipe.x + pipeWidth > 0);
