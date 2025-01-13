@@ -12,7 +12,17 @@ const birdImage = new Image();
 birdImage.src = '../assets/flappy.png';
 
 const tubeImage = new Image();
-tubeImage.src = 'assets/tube.png';
+tubeImage.src = 'assets/tube_bottom.png';
+
+const tubeTopImage = new Image();
+tubeTopImage.src = 'assets/tube_top.png';
+
+
+const tubeRImage = new Image();
+tubeRImage.src = 'assets/tube_bottomr.png';
+
+const tubeTopRImage = new Image();
+tubeTopRImage.src = 'assets/tube_topr.png';
 
 const bird = {
     x: 110,
@@ -67,9 +77,11 @@ let currentNote = "--"; // Current detected note
 function drawPipes() {
     ctx.fillStyle = '#0F0';
     pipes.forEach(pipe => {
-        ctx.drawImage(tubeImage, pipe.x, 0, pipeWidth, pipe.top);
+        ctx.drawImage(tubeRImage, pipe.x, 0, pipeWidth, pipe.top);
+        ctx.drawImage(tubeTopRImage,pipe.x-2,pipe.top,pipeWidth+2,30)
 
         ctx.drawImage(tubeImage, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+        ctx.drawImage(tubeTopImage,pipe.x-2,canvas.height - pipe.bottom,pipeWidth+2,30)
     });
 }
 
